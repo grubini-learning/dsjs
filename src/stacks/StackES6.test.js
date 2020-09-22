@@ -1,13 +1,11 @@
 const { expect } = require('chai');
-const StackES5 = require('./StackES5');
+const StackES6 = require('./StackES6');
 
-
-
-describe('testing ES5 stack', () => {
+describe('testing a ES6 Stack', () => {
   let auxStack;
   const sampleTest = [123, 54, 876, 923, 206];
   beforeEach(() => {
-    auxStack = new StackES5(6);
+    auxStack = new StackES6(6);
     sampleTest.forEach(item => auxStack.push(item));
   });
 
@@ -34,5 +32,4 @@ describe('testing ES5 stack', () => {
     auxStack.pop();
     expect(auxStack.pop()).to.equal('Stack is Empty');
   });
-
 });

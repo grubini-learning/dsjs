@@ -1,4 +1,4 @@
-class Stack {
+class StackES6 {
   constructor(size) {
     this.MAX_SIZE = size;
     this.size = 0;
@@ -9,14 +9,14 @@ class Stack {
     return this.size === 0;
   }
   peek() {
-    return this.stack[this.size];
+    return this.stack[this.size - 1];
   }
   getSize() {
     return this.size;
   }
   push(element) {
-    if (this.size + 1 > this.MAX_SIZE) {
-      return 'Array is full';
+    if (this.size > this.MAX_SIZE) {
+      return 'Stack is full';
     }
     this.stack.push(element);
     this.size++;
@@ -29,3 +29,4 @@ class Stack {
     return this.stack.pop();
   }
 }
+module.exports = StackES6;
