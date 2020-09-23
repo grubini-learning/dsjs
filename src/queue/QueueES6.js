@@ -2,32 +2,40 @@ class QueueES6 {
   constructor(capacity) {
     this.capacity = capacity;
     this.queue = [];
-    this.quantity = 0;
+    this.back = 0;
+    this.top = 0;
   }
 
   _isEmpty() {
-    return this.quantity === 0;
+    return this.top === this.back;
   }
   getQuantity() {
-    return this.quantity;
+    return this.back - this.top;
   }
   getFront() {
-    return this.queue[0];
+    return this.queue[this.top];
   }
   enqueue(element) {
-    if (this.quantity + 1 > this.capacity) {
+    if (this.back + 1 > this.capacity) {
       return 'Overflow';
     }
-    this.quantity++;
+    this.back++;
     this.queue.push(element);
   }
   dequeue() {
     if (this._isEmpty()) {
       return 'Underflow';
     }
-    this.quantity--;
-    return this.queue.shift();
+    const temp = this.queue[this.top];
+    this._shiftElements();
+    this.back--;
+    return temp;
+  }
+  _shiftElements() {
+    for (let current = 1; current <= this.back; current++) {
+      this.queue[current - 1] = this.queue[current];
+    }
   }
 }
 
-module.exports = QueueES6
+module.exports = QueueES6;
