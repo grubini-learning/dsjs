@@ -1,4 +1,4 @@
-const QueueES5 = require('./QueueES5');
+const QueueES5 = require('../QueueES5');
 
 let CircularQueueES5 = function(capacity) {
   QueueES5.call(this, capacity);

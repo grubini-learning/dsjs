@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const QueueES6 = require('./QueueES6');
+const QueueES6 = require('../QueueES6');
 
 class CircularQueueES6 extends QueueES6 {
   constructor(capacity) {

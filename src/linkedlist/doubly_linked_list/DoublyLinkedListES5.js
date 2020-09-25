@@ -83,7 +83,15 @@ DoublyLinkedListES5.prototype.removeAtFront = function() {
   if (this._isEmpty()) {
     return EMPTY_LIST;
   }
-
+  const removed = new DoublyNode(this.head.getData())
+  if (this.quantity === 1) {
+    this.head = null;
+    this.tail = null;
+  } else {
+    this.head = this.head.getNext();
+    this.head.setPrevious(null);
+  }
+  return removed;
 };
 DoublyLinkedListES5.prototype.removeAfter = function(removeData) {
   if (this._isEmpty()) {
