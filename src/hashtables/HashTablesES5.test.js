@@ -35,6 +35,7 @@ describe('HashTable ES5 methods', () => {
     auxHashTable.insert(13);
     auxHashTable.insert(7);
     auxHashTable.insert(12);
+    console.log(auxHashTable.printHelper());
     expect(auxHashTable.getCapacity()).to.equal(20);
   });
   it('should resize after adding the 8th value to 20', () => {
@@ -47,6 +48,33 @@ describe('HashTable ES5 methods', () => {
     auxHashTable.insert(7);
     auxHashTable.insert(12);
     auxHashTable.insert(1);
+    console.log(auxHashTable.printHelper());
     expect(auxHashTable.getCapacity()).to.equal(20);
+  });
+  it('Quadratic hash method should resize after adding the 8th value to 20', () => {
+    aux1HashTable = new HashTableES5(MAX_ALLOWED_CAPACITY, MIN_ALLOWED_CAPACITY, 10, HashingMethod.methods.DIVISION, CollisionTechnique.techniques.QUADRATIC_PROBING);
+    aux1HashTable.insert(3);
+    aux1HashTable.insert(2);
+    aux1HashTable.insert(9);
+    aux1HashTable.insert(6);
+    aux1HashTable.insert(11);
+    aux1HashTable.insert(13);
+    aux1HashTable.insert(7);
+    aux1HashTable.insert(12);
+    console.log(aux1HashTable.printHelper());
+    expect(aux1HashTable.getCapacity()).to.equal(20);
+  });
+  it('Double Hash technique should resize after adding the 8th value to 10', () => {
+    aux2HashTable = new HashTableES5(MAX_ALLOWED_CAPACITY, MIN_ALLOWED_CAPACITY, 10, HashingMethod.methods.DIVISION, CollisionTechnique.techniques.DOUBLE_HASHING);
+    aux2HashTable.insert(3);
+    aux2HashTable.insert(2);
+    aux2HashTable.insert(9);
+    aux2HashTable.insert(6);
+    aux2HashTable.insert(11);
+    aux2HashTable.insert(13);
+    aux2HashTable.insert(7);
+    aux2HashTable.insert(12);
+    console.log(aux2HashTable.printHelper());
+    expect(aux2HashTable.getCapacity()).to.equal(10);
   });
 });

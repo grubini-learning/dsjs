@@ -11,15 +11,16 @@ class CollisionTechnique {
   }
 
   static resolveCollision(hashTable, firstHash, node, colMethod = techniques.LINEAR_PROBING) {
+    console.log(`fHash ${firstHash}, data: ${node.content}`)
     switch (colMethod) {
       case techniques.CHAINING:
         return CollisionTechnique.chaining();
       case techniques.QUADRATIC_PROBING:
-        return CollisionTechnique.quadraticProbing();
+        return CollisionTechnique._collisionProcess({hashTable, firstHash, node, cTechnique: (hash, probes, size) => (firstHash + (probes ** 2)) % size});
       case techniques.DOUBLE_HASHING:
-        return CollisionTechnique.doubleHashing();
+        return CollisionTechnique._collisionProcess({hashTable, firstHash, node, calcDoubleHash: (content, size) => ((3 * content) + 1) % size, cTechnique: (firstHash, probes, size, secondHash) => (firstHash + (secondHash * probes)) % size});
       default:
-        return CollisionTechnique._collisionProcess(hashTable, firstHash, node, (hash, probes, size) =>  (hash + probes) % size);
+        return CollisionTechnique._collisionProcess({hashTable, firstHash, node, cTechnique: (hash, probes, size) =>  (hash + probes) % size});
     }
   }
 
@@ -32,13 +33,22 @@ class CollisionTechnique {
   static doubleHashing(position, firstHash, secondHash, size) {
     return (firstHash + (secondHash * position)) % size;
   }
-  static _collisionProcess(hashTable, hash, node, cTechnique) {
+  static _collisionProcess(args) {
+    let { hashTable, firstHash, node, calcDoubleHash = undefined, cTechnique } = args;
+    console.log(' this is the hash, ', firstHash)
     const size = hashTable.length;
     let isInserted = false;
     let probes = 0;
-    let possiblePosition = hash;
+    let possiblePosition = firstHash;
+    let secondHash = undefined;
+    if (calcDoubleHash) {
+      secondHash = calcDoubleHash(node.content, size);
+      console.log('second hash ', secondHash)
+    }
+
     while (!isInserted && probes < size) {
-      possiblePosition = cTechnique(hash, probes, size);
+      possiblePosition = cTechnique(firstHash, probes, size, secondHash);
+      console.log('possible ', possiblePosition)
       if(possiblePosition < size) {
         if (hashTable[possiblePosition] === undefined) {
           hashTable[possiblePosition] = node;

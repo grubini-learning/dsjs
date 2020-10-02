@@ -79,7 +79,7 @@ HashTableES5.prototype.printHelper = function() {
   let auxStr = '';
   for (node of this.hashTable) {
     if (node) {
-      str += `${node.data} `;
+      str += `${node.content} `;
     } else {
       str += 'undefined ';
     }
