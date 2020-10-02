@@ -19,20 +19,26 @@ class CollisionTechnique {
       case techniques.DOUBLE_HASHING:
         return CollisionTechnique.doubleHashing();
       default:
-        return CollisionTechnique.linearProbing(hashTable, firstHash, node);
+        return CollisionTechnique._collisionProcess(hashTable, firstHash, node, (hash, probes, size) =>  (hash + probes) % size);
     }
   }
 
   chaining(hashTable) {
 
   }
-  static linearProbing(hashTable, hash, node) {
+  static quadraticProbing(position, hash, size) {
+    return ((hash * (position ** 2)) % size);
+  }
+  static doubleHashing(position, firstHash, secondHash, size) {
+    return (firstHash + (secondHash * position)) % size;
+  }
+  static _collisionProcess(hashTable, hash, node, cTechnique) {
     const size = hashTable.length;
     let isInserted = false;
     let probes = 0;
     let possiblePosition = hash;
     while (!isInserted && probes < size) {
-      possiblePosition = (hash + probes) % size;
+      possiblePosition = cTechnique(hash, probes, size);
       if(possiblePosition < size) {
         if (hashTable[possiblePosition] === undefined) {
           hashTable[possiblePosition] = node;
@@ -45,12 +51,6 @@ class CollisionTechnique {
     }
 
     return (isInserted) ? probes : 0;
-  }
-  static quadraticProbing(position, hash, size) {
-    return ((hash * (position ** 2)) % size);
-  }
-  static doubleHashing(position, firstHash, secondHash, size) {
-    return (firstHash + (secondHash * position)) % size;
   }
 }
 
