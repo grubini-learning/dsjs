@@ -35,7 +35,6 @@ describe('HashTable ES5 methods', () => {
     auxHashTable.insert(13);
     auxHashTable.insert(7);
     auxHashTable.insert(12);
-    console.log(auxHashTable.printHelper());
     expect(auxHashTable.getCapacity()).to.equal(20);
   });
   it('should resize after adding the 8th value to 20', () => {
@@ -48,7 +47,6 @@ describe('HashTable ES5 methods', () => {
     auxHashTable.insert(7);
     auxHashTable.insert(12);
     auxHashTable.insert(1);
-    console.log(auxHashTable.printHelper());
     expect(auxHashTable.getCapacity()).to.equal(20);
   });
   it('Quadratic hash method should resize after adding the 8th value to 20', () => {
@@ -61,7 +59,6 @@ describe('HashTable ES5 methods', () => {
     aux1HashTable.insert(13);
     aux1HashTable.insert(7);
     aux1HashTable.insert(12);
-    console.log(aux1HashTable.printHelper());
     expect(aux1HashTable.getCapacity()).to.equal(20);
   });
   it('Double Hash technique should resize after adding the 8th value to 10', () => {
@@ -74,7 +71,6 @@ describe('HashTable ES5 methods', () => {
     aux2HashTable.insert(13);
     aux2HashTable.insert(7);
     aux2HashTable.insert(12);
-    console.log(aux2HashTable.printHelper());
     expect(aux2HashTable.getCapacity()).to.equal(10);
   });
 });

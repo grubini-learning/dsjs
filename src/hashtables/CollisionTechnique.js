@@ -11,7 +11,6 @@ class CollisionTechnique {
   }
 
   static resolveCollision(hashTable, firstHash, node, colMethod = techniques.LINEAR_PROBING) {
-    console.log(`fHash ${firstHash}, data: ${node.content}`)
     switch (colMethod) {
       case techniques.CHAINING:
         return CollisionTechnique.chaining();
@@ -35,7 +34,6 @@ class CollisionTechnique {
   }
   static _collisionProcess(args) {
     let { hashTable, firstHash, node, calcDoubleHash = undefined, cTechnique } = args;
-    console.log(' this is the hash, ', firstHash)
     const size = hashTable.length;
     let isInserted = false;
     let probes = 0;
@@ -43,12 +41,10 @@ class CollisionTechnique {
     let secondHash = undefined;
     if (calcDoubleHash) {
       secondHash = calcDoubleHash(node.content, size);
-      console.log('second hash ', secondHash)
     }
 
     while (!isInserted && probes < size) {
       possiblePosition = cTechnique(firstHash, probes, size, secondHash);
-      console.log('possible ', possiblePosition)
       if(possiblePosition < size) {
         if (hashTable[possiblePosition] === undefined) {
           hashTable[possiblePosition] = node;
