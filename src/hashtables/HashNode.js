@@ -1,7 +1,7 @@
 class HashNode {
   constructor(data) {
     this.data = data;
-    this.probes = 0;
+    this.location = undefined;
   }
 
   get content() {
@@ -10,8 +10,9 @@ class HashNode {
   get attempts() {
     return this.probes;
   }
-  set attempts(value) {
-    this.probes = value;
+
+  set position(value) {
+    this.location = value;
   }
 }
 

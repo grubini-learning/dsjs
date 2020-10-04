@@ -47,6 +47,7 @@ class CollisionTechnique {
       possiblePosition = cTechnique(firstHash, probes, size, secondHash);
       if(possiblePosition < size) {
         if (hashTable[possiblePosition] === undefined) {
+          node.position = possiblePosition;
           hashTable[possiblePosition] = node;
           isInserted = true;
         }
@@ -57,6 +58,22 @@ class CollisionTechnique {
     }
 
     return (isInserted) ? probes : 0;
+  }
+  static searchingProcess(key, hash, hashTable) {
+    const size = hashTable.length;
+    let isFound = false;
+    let probes = 0;
+    let nextAttempt = hash;
+    let nodeFound = undefined;
+    while (!isFound && probes < hashTable.length) {
+      nextAttempt = (hash + probes) % size;
+      if (hashTable[nextAttempt] && hashTable[nextAttempt].content === key) {
+        nodeFound = hashTable[nextAttempt];
+        isFound = true;
+      }
+      probes++;
+    }
+    return nodeFound;
   }
 }
 

@@ -71,6 +71,44 @@ describe('HashTable ES5 methods', () => {
     aux2HashTable.insert(13);
     aux2HashTable.insert(7);
     aux2HashTable.insert(12);
+    console.log(aux2HashTable.printHelper())
     expect(aux2HashTable.getCapacity()).to.equal(10);
+  });
+  it('Should find content 11', () => {
+    aux2HashTable = new HashTableES5(MAX_ALLOWED_CAPACITY, MIN_ALLOWED_CAPACITY, 10, HashingMethod.methods.DIVISION, CollisionTechnique.techniques.DOUBLE_HASHING);
+    aux2HashTable.insert(3);
+    aux2HashTable.insert(2);
+    aux2HashTable.insert(9);
+    aux2HashTable.insert(6);
+    aux2HashTable.insert(11);
+    aux2HashTable.insert(13);
+    aux2HashTable.insert(7);
+    aux2HashTable.insert(12);
+    expect(aux2HashTable.search(11).content).to.equal(11);
+  });
+  it('Should find and remove spot three in the hash table returning 11', () => {
+    aux2HashTable = new HashTableES5(MAX_ALLOWED_CAPACITY, MIN_ALLOWED_CAPACITY, 10, HashingMethod.methods.DIVISION, CollisionTechnique.techniques.DOUBLE_HASHING);
+    aux2HashTable.insert(3);
+    aux2HashTable.insert(2);
+    aux2HashTable.insert(9);
+    aux2HashTable.insert(6);
+    aux2HashTable.insert(11);
+    aux2HashTable.insert(13);
+    aux2HashTable.insert(7);
+    aux2HashTable.insert(12);
+    expect(aux2HashTable.remove(11)).to.equal(11);
+  });
+  it('Quantity should be 5', () => {
+    aux2HashTable = new HashTableES5(MAX_ALLOWED_CAPACITY, MIN_ALLOWED_CAPACITY, 10, HashingMethod.methods.DIVISION, CollisionTechnique.techniques.DOUBLE_HASHING);
+    aux2HashTable.insert(3);
+    aux2HashTable.insert(2);
+    aux2HashTable.insert(9);
+    aux2HashTable.insert(6);
+    aux2HashTable.insert(11);
+    aux2HashTable.insert(13);
+    aux2HashTable.insert(7);
+    aux2HashTable.insert(12);
+    aux2HashTable.remove(11);
+    expect(aux2HashTable.getQuantity()).to.equal(5);
   });
 });

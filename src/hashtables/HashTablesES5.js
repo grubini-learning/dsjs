@@ -26,6 +26,7 @@ HashTableES5.prototype.insert = function(data) {
       this.quantity++;
     }
   } else {
+    surrogateHashNode.position = firstHash;
     this.hashTable[firstHash] = surrogateHashNode;
     this.quantity++;
   }
@@ -33,8 +34,27 @@ HashTableES5.prototype.insert = function(data) {
   this._isRehashingNeeded();
   return message;
 };
-HashTableES5.prototype.remove = function() {};
-HashTableES5.prototype.search = function() {};
+HashTableES5.prototype.remove = function(key) {
+  let nodeToRemove = this.search(key);
+  let removedData = undefined;
+  if (nodeToRemove) {
+    this.hashTable[nodeToRemove.position] = undefined;
+    removedData = nodeToRemove.content;
+    nodeToRemove.data = undefined;
+    this.quantity--;
+  }
+  return removedData;
+};
+HashTableES5.prototype.search = function(key) {
+  // get and make it go throuh a hash function
+  const firstHash = this._firstLevelHashFunction(key);
+  // access that cell,
+  if (this.hashTable[firstHash] && key === this.hashTable[firstHash].content) {
+    return this.hashTable[firstHash];
+  }
+  // if its not the content that you were looking for
+  return CollisionTechnique.searchingProcess(key, firstHash, this.hashTable);
+};
 
 HashTableES5.prototype._isCollision = function(hash) {
   if (hash < this.currentCapacity && this.hashTable[hash] === undefined) {
