@@ -145,7 +145,7 @@ HashTableES5.prototype._isRehashingNeeded = function() {
     this._resize(2);
   }
 };
-HashTableES5.prototype.isUnderHashingNeeded = function() {
+HashTableES5.prototype._isUnderHashingNeeded = function() {
   if (this._getLoadFactor() < this.MIN_CAPACITY) {
     this._resize(0.5);
   }
