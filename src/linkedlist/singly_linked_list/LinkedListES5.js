@@ -15,7 +15,7 @@ LinkedListES5.prototype.getTail = function() { return this.tail };
 LinkedListES5.prototype.getQuantity = function() { return this.quantity };
 LinkedListES5.prototype.increment = function() { this.quantity++ };
 LinkedListES5.prototype.decrement = function() { this.quantity-- };
-LinkedListES5.prototype._findNode = function(data) {
+LinkedListES5.prototype.findNode = function(data) {
   if (this._isEmpty()) {
     return EMPTY_LIST;
   }
@@ -25,7 +25,7 @@ LinkedListES5.prototype._findNode = function(data) {
   }
   return current;
 };
-LinkedListES5.prototype._findPrevious = function(node) {
+LinkedListES5.prototype.findPrevious = function(node) {
   if (this._isEmpty()) {
     return EMPTY_LIST;
   }
@@ -53,7 +53,7 @@ LinkedListES5.prototype.addFromBeginning = function(node) {
   this.increment();
 };
 LinkedListES5.prototype.addAfter = function(previousData, newNode) {
-  const previousNode = this._findNode(previousData);
+  const previousNode = this.findNode(previousData);
   if (previousNode)
     if (!previousNode.getNext()) {
       this.tail = newNode;
@@ -101,7 +101,7 @@ LinkedListES5.prototype.removeFromEnd = function() {
     this.head = null;
     this.tail = null;
   } else {
-    const newTail = this._findPrevious(this.tail);
+    const newTail = this.findPrevious(this.tail);
     removed = new SinglyNode(this.tail.getData());
     removed.setNext(null);
     newTail.setNext(null);
@@ -114,7 +114,7 @@ LinkedListES5.prototype.removeAfter = function(nodeData) {
   if (this._isEmpty()) {
     return EMPTY_LIST;
   }
-  const wantedNode = this._findNode(nodeData);
+  const wantedNode = this.findNode(nodeData);
   let removedNode;
   if (!wantedNode) {
     return 'Node not found';

@@ -1,5 +1,7 @@
-const CollisionTechnique = require('./CollisionTechnique');
 const HashNode = require('./HashNode');
+const SinglyLinkedList = require('../linkedlist/singly_linked_list/LinkedListES5');
+const SinglyNode = require('../linkedlist/singly_linked_list/SinglyNode');
+const CollisionTechnique = require('./CollisionTechnique');
 
 const HashTableES5 = function(maxCapacity, minCapacity, currentCapacity, hashingMethod, colMethod = undefined) {
   this.MAX_CAPACITY = maxCapacity;
@@ -15,33 +17,78 @@ HashTableES5.prototype.insert = function(data) {
   // i would calculate the first hash and try to add it
   const firstHash = this._firstLevelHashFunction(data);
   const surrogateHashNode = new HashNode(data);
+  const isCollision = this._isCollision(firstHash);
   let message = 'successfull insertion';
   // if there is a number there, then there is a collision
-  if (this._isCollision(firstHash)) {
-    const wasSuccessfull = CollisionTechnique.resolveCollision(this.hashTable, firstHash, surrogateHashNode, this.colMethod);
-    if (!wasSuccessfull)  {
-      message = 'unfortunately item was not inserted';
+  if (this.colMethod !== CollisionTechnique.techniques.CHAINING) {
+    if (isCollision) {
+      const wasSuccessfull = CollisionTechnique.resolveCollision(this.hashTable, firstHash, surrogateHashNode, this.colMethod);
+      if (!wasSuccessfull) {
+        message = 'unfortunately item was not inserted';
+      } else {
+        surrogateHashNode.attempts = wasSuccessfull;
+        this.quantity++;
+      }
     } else {
-      surrogateHashNode.attempts = wasSuccessfull;
+      surrogateHashNode.position = firstHash;
+      this.hashTable[firstHash] = surrogateHashNode;
       this.quantity++;
     }
+    this._isRehashingNeeded();
   } else {
-    surrogateHashNode.position = firstHash;
-    this.hashTable[firstHash] = surrogateHashNode;
+    const newSinglyNode = new SinglyNode(data);
+    if (isCollision) {
+      this.hashTable[firstHash].addFromEnd(newSinglyNode);
+    } else {
+      this.hashTable[firstHash] = new SinglyLinkedList(newSinglyNode);
+    }
     this.quantity++;
   }
   // see if resizing is needed
-  this._isRehashingNeeded();
   return message;
 };
 HashTableES5.prototype.remove = function(key) {
-  let nodeToRemove = this.search(key);
+  let nodeToRemove = undefined;
   let removedData = undefined;
-  if (nodeToRemove) {
-    this.hashTable[nodeToRemove.position] = undefined;
-    removedData = nodeToRemove.content;
-    nodeToRemove.data = undefined;
-    this.quantity--;
+
+  if (this.colMethod !== CollisionTechnique.techniques.CHAINING) {
+    nodeToRemove = this.search(key);
+    if (nodeToRemove) {
+      this.hashTable[nodeToRemove.position] = undefined;
+      removedData = nodeToRemove.content;
+      nodeToRemove.data = undefined;
+      this.quantity--;
+    }
+  } else {
+    this._removeChaining(key);
+  }
+
+  return removedData;
+};
+HashTableES5.prototype._removeChaining = function(key) {
+  const hash = this._firstLevelHashFunction(key);
+  let singlyList = this.hashTable[hash];
+  let nodeToRemove = undefined;
+  let removedData = undefined;
+
+  if (singlyList) {
+    if (singlyList.getQuantity() === 1) {
+      if (singlyList.getHead().getData() === key) {
+        removedData = singlyList.getHead().getData();
+        singlyList.decrement();
+        this.hashTable[hash] = undefined;
+        this.quantity--;
+      }
+    } else {
+      let previousNode = singlyList.findPrevious(new SinglyNode(key));
+      if (previousNode) {
+        nodeToRemove = previousNode.getNext();
+        removedData = nodeToRemove.getData();
+        previousNode.setNext(nodeToRemove.getNext());
+        this.quantity--;
+        singlyList.decrement();
+      }
+    }
   }
   return removedData;
 };
@@ -49,11 +96,21 @@ HashTableES5.prototype.search = function(key) {
   // get and make it go throuh a hash function
   const firstHash = this._firstLevelHashFunction(key);
   // access that cell,
-  if (this.hashTable[firstHash] && key === this.hashTable[firstHash].content) {
-    return this.hashTable[firstHash];
+  if (this.hashTable[firstHash]) {
+    if (this.colMethod !== CollisionTechnique.techniques.CHAINING) {
+      if (key === this.hashTable[firstHash].content) {
+        return this.hashTable[firstHash];
+      }
+      return CollisionTechnique.searchingProcess(key, firstHash, this.hashTable);
+    } else {
+      const nodeFound = this.hashTable[firstHash].findNode(key);
+      if (nodeFound) {
+        return nodeFound.getData();
+      }
+    }
   }
   // if its not the content that you were looking for
-  return CollisionTechnique.searchingProcess(key, firstHash, this.hashTable);
+  return 'not found';
 };
 
 HashTableES5.prototype._isCollision = function(hash) {
@@ -97,52 +154,25 @@ HashTableES5.prototype.isUnderHashingNeeded = function() {
 HashTableES5.prototype.printHelper = function() {
   let str = '';
   let auxStr = '';
-  for (node of this.hashTable) {
-    if (node) {
-      str += `${node.content} `;
-    } else {
-      str += 'undefined ';
+  if (this.colMethod !== CollisionTechnique.techniques.CHAINING) {
+    for (node of this.hashTable) {
+      if (node) {
+        str += `${node.content} `;
+      } else {
+        str += 'undefined ';
+      }
+    }
+  } else {
+    for (node of this.hashTable) {
+      if (node) {
+        str += node.printList() + '\n';
+      } else {
+        str += 'undefined' + '\n';
+      }
     }
   }
   str = str.trim() + '.';
   return str;
 };
 
-// concept, tries to insert object in the array by hashing technique in (division, modulus, multiplication)
-// if the spot is taken there is a collision
-  // take the collission technique to keep trying until
-    // we insert it
-    // the number of times we have tried is greater than the length of the hash table
-// the hash table can be resized
-// it can also remove elements
-//it can also search
-
-// open addressing
-
-
-//Collisions
-//===================
-  // chaining
-    // uses a doubly linked list if collision happens
-  // Open Addressing (elements are stored in the hash table itself)
-    // Linear Probing h`(k) is a new hash function
-      // checks the next slot
-      // h`(k, i) = (h(k) + 1) mod m
-    // Quadratic Probing
-      // spcing is increased
-      // h(k, i) = (h`(k) + c1i + c2i^2) mod m
-
-//Hashing Methods
-//==============
-  // Division
-    // k --> key m --> size of table
-    // h(k) = k mod m
-  // Multiplication
-    // c1 and c2
-    // A is any constant between 0 and 1 but = (5**.5 / 2)
-    // h(k) = floor value m * (kA mod 1)
-  //Double hashing
-    // h(k, i) = (h1(k) + i * h2(k)) mod m
-    // PRIME - (key mod PRIME)
-
-    module.exports = HashTableES5;
+module.exports = HashTableES5;

@@ -111,4 +111,42 @@ describe('HashTable ES5 methods', () => {
     aux2HashTable.remove(11);
     expect(aux2HashTable.getQuantity()).to.equal(5);
   });
+  it('inserting with chaining, quantity 8', () => {
+    aux3HashTable = new HashTableES5(MAX_ALLOWED_CAPACITY, MIN_ALLOWED_CAPACITY, 10, HashingMethod.methods.DIVISION, CollisionTechnique.techniques.CHAINING);
+    aux3HashTable.insert(3);
+    aux3HashTable.insert(2);
+    aux3HashTable.insert(9);
+    aux3HashTable.insert(6);
+    aux3HashTable.insert(11);
+    aux3HashTable.insert(13);
+    aux3HashTable.insert(7);
+    aux3HashTable.insert(12);
+    expect(aux3HashTable.getQuantity()).to.equal(8);
+  });
+  it('remove with chaining, quantity 6', () => {
+    aux3HashTable = new HashTableES5(MAX_ALLOWED_CAPACITY, MIN_ALLOWED_CAPACITY, 10, HashingMethod.methods.DIVISION, CollisionTechnique.techniques.CHAINING);
+    aux3HashTable.insert(3);
+    aux3HashTable.insert(2);
+    aux3HashTable.insert(9);
+    aux3HashTable.insert(6);
+    aux3HashTable.insert(11);
+    aux3HashTable.insert(13);
+    aux3HashTable.insert(7);
+    aux3HashTable.insert(12);
+    aux3HashTable.remove(11);
+    aux3HashTable.remove(6);
+    expect(aux3HashTable.getQuantity()).to.equal(6);
+  });
+  it('search with chaining, return 11', () => {
+    aux3HashTable = new HashTableES5(MAX_ALLOWED_CAPACITY, MIN_ALLOWED_CAPACITY, 10, HashingMethod.methods.DIVISION, CollisionTechnique.techniques.CHAINING);
+    aux3HashTable.insert(3);
+    aux3HashTable.insert(2);
+    aux3HashTable.insert(9);
+    aux3HashTable.insert(6);
+    aux3HashTable.insert(11);
+    aux3HashTable.insert(13);
+    aux3HashTable.insert(7);
+    aux3HashTable.insert(12);
+    expect(aux3HashTable.search(11)).to.equal(11);
+  });
 });
